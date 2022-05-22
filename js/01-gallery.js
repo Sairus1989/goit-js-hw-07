@@ -1,44 +1,47 @@
 import { galleryItems } from "./gallery-items.js";
 // Change code below this line
 
-const galleryConteiner = document.querySelector('.gallery');
-const cardsGallery = createImgCards(galleryItems);
-galleryConteiner.insertAdjacentHTML('beforeend',cardsGallery );
+const galleryContainer = document.querySelector('.gallery');
+const cardsMarkup = createGalleryCardsMarkup(galleryItems);
 
-function createImgCards (cards){
-    return cards.map(({ preview,original,description }) => {
-        return `<div class="gallery__item">
+galleryContainer.insertAdjacentHTML('beforeend', cardsMarkup);
+
+function createGalleryCardsMarkup (galleryItems) {
+    return galleryItems.map(({preview, original, description}) => {
+    return `
+    <div class="gallery__item">
         <a class="gallery__link" href="${original}">
-          <img
+            <img
             class="gallery__image"
             src="${preview}"
             data-source="${original}"
             alt="${description}"
-          />
+            />
         </a>
-      </div>`;
-    
-}).join('');
+    </div>
+    `;
+    }).join('');
 };
-galleryConteiner.addEventListener("click", galleryCardClick);
+galleryContainer.addEventListener('click', onGalleryContainerClick)
 
-
-function galleryCardClick(evt) {    
+function onGalleryContainerClick (evt) {
     evt.preventDefault();
-    if (!evt.target.dataset.source) {
-        return
-    }
-    const lightBox = basicLightbox.create(`
-		<img  src="${evt.target.dataset.source}">
-	`);
-    lightBox.show();
-    
-    this.addEventListener("keydown", onPresEscape);
-    function onPresEscape(evt) {
-        if (evt.key !== "Escape") {
+    const isGallerySwatchEl = evt.target.dataset.source;
+        if (!isGallerySwatchEl) {
             return
         }
-        lightBox.close();
-        this.removeEventListener("keydown", onPresEscape);
-    }
+        const lightBox = basicLightbox.create(`
+    		<img  src="${isGallerySwatchEl}">
+    	`);
+        lightBox.show();
+        
+        this.addEventListener("keydown", onPresEscape);
+        function onPresEscape(evt) {
+            if (evt.key !== "Escape") {
+                return
+            }
+            lightBox.close();
+            this.removeEventListener("keydown", onPresEscape);
+        }
 }
+
